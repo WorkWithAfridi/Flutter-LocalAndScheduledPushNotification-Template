@@ -1,16 +1,40 @@
-# flutter_push_noti_project
+# Find the notification service file in /lib
 
-A new Flutter project.
+# For AndroidInitializationSettings pass the image file name (flutter_logo) and make sure to add this image file inside android/app/src/main/res/drawable folder.
 
-## Getting Started
+# Setup android/app build.gradle with the commented instructions
+# Setup android manifest with the commented instructions
 
-This project is a starting point for a Flutter application.
+# In order to complete the iOS setup for getting notification, we need to add the following lines inside iOS/Runner/ApDelegate.swift file
 
-A few resources to get you started if this is your first Flutter project:
+```
+import UIKit
+import Flutter
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+//----------#1----------
+import flutter_local_notifications
+//----------------------
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+@UIApplicationMain
+@objc class AppDelegate: FlutterAppDelegate {
+  override func application(
+    _ application: UIApplication,
+    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+  ) -> Bool {
+
+//----------#2----------
+    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+    GeneratedPluginRegistrant.register(with: registry)}
+//----------------------
+    GeneratedPluginRegistrant.register(with: self)
+
+//----------#3----------
+      if #available(iOS 10.0, *) {
+         UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+      }
+//----------------------
+
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+}
+```
